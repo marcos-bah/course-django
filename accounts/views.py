@@ -9,6 +9,7 @@ def home(req):
     total_orders = orders.count() 
     delivered = orders.filter(status='Delivered').count()
     pending = orders.filter(status='Pending').count()
+
     return render(req, 'accounts/dashboard.html', {
         'orders': orders, 
         'customers': customers, 
@@ -20,9 +21,20 @@ def home(req):
 
 def products(req):
     products = Product.objects.all()
-    return render(req, 'accounts/products.html', {'products': products})
 
-def customer(req):
-    return render(req, 'accounts/customer.html')
+    return render(req, 'accounts/products.html', {
+        'products': products
+    })
+
+def customer(req, pk):
+    customer = Customer.objects.get(id=pk)
+    orders = customer.order_set.all()
+    total_orders = orders.count()
+
+    return render(req, 'accounts/customer.html', {
+        'customer': customer,
+        'orders': orders,
+        'total_orders' : total_orders,
+    })
 
 
